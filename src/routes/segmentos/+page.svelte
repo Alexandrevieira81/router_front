@@ -5,8 +5,9 @@
 		atualizarSegmento,
 		deletarSegmento
 	} from '../services/segmentos.js';
-	import { buscarPontos, cadastrarPonto } from '../services/pontos.js';
+	import { buscarPontos, cadastrarPonto, deletarPonto,atualizarPonto } from '../services/pontos.js';
 	import { onMount } from 'svelte';
+	import { fly } from 'svelte/transition';
 
 	let returnSegmentos;
 	let segmentoReturn = [];
@@ -24,6 +25,7 @@
 	let pontosReturnCarregados = [];
 
 	let editId = null;
+	let editIdPonto = null;
 
 	onMount(async () => {
 		iniciarPontos();
@@ -74,21 +76,47 @@
 	};
 
 	const inserirPonto = async () => {
-		pontoCadastrado = null;
+		try {
+			pontoCadastrado = null;
+			let post = { ...dadosPonto };
+			
 
-		let post = { ...dadosPonto };
+			if (editIdPonto == null) {
 
-		//post.password = md5(post.password);
+				console.log('Dentro do Post Ponto Inserção ', post);
+				pontoCadastrado = await cadastrarPonto(post);
+				console.log('Retorno do banco ', pontoCadastrado);
 
-		console.log('Dentro do Post Ponto', post);
+				if (pontoCadastrado.status == 200) {
+					document.getElementById('buscaPontos').innerHTML = pontoCadastrado.data.message;
+					//iniciarPontos();
+				} else {
+					document.getElementById('buscaPontos').innerHTML = pontoCadastrado.data.message;
+				}
+			} else {
+				
+				post.id = editIdPonto;
+				//const nome = document.querySelector('NomePonto');
+				
+				//post.nome = dadosPonto.nome;
+				console.log('Dentro do Post editar', post);
 
-		pontoCadastrado = await cadastrarPonto(post);
+				pontoCadastrado = await atualizarPonto(post);
 
-		if (pontoCadastrado.status == 200) {
-			document.getElementById('resultado').innerHTML = pontoCadastrado.data.message;
-			iniciarPontos();
-		} else {
-			document.getElementById('resultado').innerHTML = pontoCadastrado.data.message;
+				if (pontoCadastrado.status == 200) {
+					document.getElementById('buscaPontos').innerHTML = pontoCadastrado.data.message;
+				} else {
+					document.getElementById('buscaPontos').innerHTML = pontoCadastrado.data.message;
+				}
+				
+			}
+		} catch (error) {
+
+			console.log('Erro de Inserção ou Atualização do Ponto');
+		}finally{
+			document.getElementById('btnCadastrarPonto').innerText = 'Cadastrar';
+			editIdPonto = null;
+
 		}
 	};
 
@@ -126,6 +154,32 @@
 			} else {
 				document.getElementById('buscaSegmentos').innerHTML = returnSegmentos.data.message;
 				document.getElementById('buscaSegmentos').style.color = 'red';
+			}
+		}
+	};
+
+	const putPonto = async (ponto) => {
+		console.log(ponto, ' Pegou o atualizar');
+
+		editIdPonto = ponto.id;
+
+		//let pontoNome = document.getElementById('NomePonto');
+		dadosPonto.nome = ponto.nome;
+
+		document.getElementById('btnCadastrarPonto').innerText = 'Atualizar';
+	};
+	const delPonto = async (id) => {
+		returnPontos = null;
+		if (confirm('Deseja Realmente Deletar o Ponto de Código ' + id)) {
+			returnPontos = await deletarPonto(id);
+			console.log(returnPontos);
+			if (returnPontos.status == 200) {
+				document.getElementById('buscaPontos').innerHTML = returnPontos.data.message;
+				document.getElementById('buscaPontos').style.color = 'blue';
+				segmento();
+			} else {
+				document.getElementById('buscaPontos').innerHTML = returnPontos.data.message;
+				document.getElementById('buscaPontos').style.color = 'red';
 			}
 		}
 	};
@@ -292,10 +346,10 @@
 
 <div style="margin-top: 20px;">
 	<p style="margin-top: 2px;">Nome do Ponto:</p>
-	<input type="text" name="" id="registro" bind:value={dadosPonto.nome} />
+	<input type="text" name="" id="NomePonto" bind:value={dadosPonto.nome} />
 
 	<div style="margin-top: 20px;">
-		<button class="button" id="btnCadastrar" type="button" on:click={() => inserirPonto()}
+		<button class="button" id="btnCadastrarPonto" type="button" on:click={() => inserirPonto()}
 			>Cadastrar</button
 		>
 	</div>
@@ -327,6 +381,13 @@
 
 					<td class="text-center">{pontoi.id}</td>
 					<td class="text-center">{pontoi.nome}</td>
+
+					<td class="text-center"
+						><button class="button" on:click={() => putPonto(pontoi)}>Atualizar</button></td
+					>
+					<td class="text-center"
+						><button class="button" on:click={() => delPonto(pontoi.id)}>Deletar</button></td
+					>
 				</tr>
 			{/each}
 		</tbody>
