@@ -45,8 +45,10 @@
 
 				if (segmentosCadastrado.status == 200) {
 					document.getElementById('resultado').innerHTML = segmentosCadastrado.data.message;
+					document.getElementById('resultado').style.color = 'blue';
 				} else {
 					document.getElementById('resultado').innerHTML = segmentosCadastrado.data.message;
+					document.getElementById('resultado').style.color = 'red';
 				}
 			} else {
 				console.log('Dentro do Post editar', post);
@@ -148,12 +150,12 @@
 			returnSegmentos = await deletarSegmento(id);
 			console.log(returnSegmentos);
 			if (returnSegmentos.status == 200) {
-				document.getElementById('buscaSegmentos').innerHTML = returnSegmentos.data.message;
-				document.getElementById('buscaSegmentos').style.color = 'blue';
+				document.getElementById('resultado').innerHTML = returnSegmentos.data.message;
+				document.getElementById('resultado').style.color = 'blue';
 				segmento();
 			} else {
-				document.getElementById('buscaSegmentos').innerHTML = returnSegmentos.data.message;
-				document.getElementById('buscaSegmentos').style.color = 'red';
+				document.getElementById('resultado').innerHTML = returnSegmentos.data.message;
+				document.getElementById('resultado').style.color = 'red';
 			}
 		}
 	};
@@ -217,16 +219,16 @@
 	const iniciarPontos = async () => {
 		returnPontos = null;
 		returnPontos = await buscarPontos();
-
+		// O texto de retorno foi removido, pois essa função inicia o combobox apenas
 		if (returnPontos.status == 200) {
 			console.log(returnPontos.data.pontos);
 			pontosReturn = await returnPontos.data.pontos;
-			document.getElementById('buscaPontos').innerHTML = returnPontos.data.message;
-			document.getElementById('buscaPontos').style.color = 'green';
+			//document.getElementById('buscaPontos').innerHTML = returnPontos.data.message;
+			//document.getElementById('buscaPontos').style.color = 'green';
 			console.log(pontosReturn);
 		} else {
-			document.getElementById('buscaPontos').style.color = 'red';
-			document.getElementById('buscaPontos').innerHTML = returnPontos.data.message;
+			//document.getElementById('buscaPontos').style.color = 'red';
+			//document.getElementById('buscaPontos').innerHTML = returnPontos.data.message;
 		}
 		prencherPontosIniciais(pontosReturn);
 		prencherPontosFinais(pontosReturn);
