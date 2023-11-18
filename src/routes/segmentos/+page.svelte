@@ -50,7 +50,7 @@
 			const final = document.querySelector('#pontosFinais');
 			post.ponto_inicial = inicial.value;
 			post.ponto_final = final.value;
-
+			
 			if (editId == null) {
 				segmentosCadastrado = await cadastrarSegmento(post);
 
@@ -62,7 +62,7 @@
 					document.getElementById('resultado').style.color = 'red';
 				}
 			} else {
-				console.log('Dentro do Post editar', post);
+				
 				post.id = editId;
 				const distancia = document.querySelector('#distancia');
 				const direcao = document.querySelector('#direcao');
@@ -70,7 +70,7 @@
 				post.distancia = distancia.value;
 				post.direcao = direcao.value;
 				post.status = status.value;
-
+				
 				segmentosCadastrado = await atualizarSegmento(post);
 
 				if (segmentosCadastrado.status == 200) {
@@ -133,7 +133,7 @@
 	};
 
 	const putSegmento = async (segmento) => {
-		console.log(segmento, ' Pegou o atualizar');
+		
 
 		editId = segmento.id;
 
@@ -154,6 +154,10 @@
 
 		document.getElementById('btnCadastrar').innerText = 'Atualizar';
 	};
+	const cancelar = async () => {
+		editId = null;
+		document.getElementById('btnCadastrar').innerText = 'Cadastrar';
+	}
 	const delSegmento = async (id) => {
 		returnSegmentos = null;
 		if (confirm('Deseja Realmente Deletar o Segmento de Código ' + id)) {
@@ -199,7 +203,7 @@
 		returnPontos = null;
 		
 			returnPontos = await buscarPontoID(id);
-			console.log("Retornou este ponto pelo ID "+returnPontos.data.ponto.nome);
+			console.log(returnPontos.data);
 			if (returnPontos.status == 200) {
 				document.getElementById('buscaPontos').innerHTML = returnPontos.data.message;
 				document.getElementById('buscaPontos').style.color = 'blue';
@@ -403,6 +407,10 @@
 					>
 					<button style="margin-left: 20px;" class="button" on:click={() => segmento()}
 						>Buscar Segmentos</button
+					>
+
+					<button class="button" id="btnCancelar" type="button" on:click={() => cancelar()}
+						>Cancelar</button
 					>
 				</div>
 				<h2>

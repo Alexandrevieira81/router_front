@@ -1,13 +1,14 @@
 <script>
 	import { goto } from '$app/navigation';
 
-	import { buscarRotas, buscarAllRotas, buscarAllSegmentos } from '../services/rotas.js';
+	import { buscarRotas, buscarAllRotas, buscarAllSegmentos,bloquearDesbloquerSegmento } from '../services/rotas.js';
 	import { onMount } from 'svelte';
 
 	let returnRotas;
-	let returnAllRotas;
-	let returnAllSegmentos;
 	let rotaReturn = [];
+	let returnAllRotas;
+	let rotaAllReturn = [];
+	let returnAllSegmentos;
 
 	let buscaRotas = {};
 	var canva = null;
@@ -50,9 +51,21 @@
 		returnAllRotas = await buscarAllRotas();
 		console.log(returnAllRotas);
 		if (returnAllRotas.status == 200) {
-			pontos = returnAllRotas.data;
+			rotaAllReturn = await returnAllRotas.data;
 
-			console.log(pontos);
+			console.log(rotaAllReturn);
+		}
+	};
+
+	const bloquearDesbloquer = async (segmento) => {
+
+		let statusSegmento = await bloquearDesbloquerSegmento(segmento);
+
+		if (statusSegmento .status == 200) {
+			document.getElementById('resultado').innerHTML = statusSegmento.data.message;
+			//carregarPontos();
+		} else {
+			document.getElementById('resultado').innerHTML = statusSegmento.data.message;
 		}
 	};
 
@@ -189,22 +202,29 @@
 		<thead>
 			<tr>
 				<!-- <th class="text-center">nome_rota</th> -->
-			
+
 				<th class="text-center">distancia</th>
 				<th class="text-center">partida</th>
 				<th class="text-center">chegada</th>
 				<th class="text-center">direcao</th>
+				
 			</tr>
 		</thead>
 		<tbody>
 			{#each rotaReturn as rotai}
 				<tr>
 					<!-- <td class="text-center">{rotai.nome_rota}</td> -->
-				
+
 					<td class="text-center">{rotai.distancia}</td>
 					<td class="text-center">{rotai.ponto_inicial}</td>
 					<td class="text-center">{rotai.ponto_final}</td>
 					<td class="text-center">{rotai.direcao}</td>
+					<!-- 	{#if rotai.status == 1}
+						<td class="text-center">Desbloqueado</td>
+					{/if}
+					{#if rotai.status == 0}
+						<td class="text-center">Bloqueado</td>
+					{/if} -->
 				</tr>
 			{/each}
 		</tbody>
@@ -222,13 +242,52 @@
 		<button class="button" on:click={() => rota()}>Buscar Rota</button>
 	</div>
 
-	<!-- 
-			<div>
-			<button class="button" on:click={() => allRota()}>Buscar todas as Rotas</button>
-		</div>
-		-->
+	<div>
+		<button class="button" on:click={() => allRota()}>Buscar todas as Rotas</button>
+	</div>
+	<table
+		class="table table-bordered table-striped"
+		width="100%"
+		style="box-shadow: 0 10px 40px #00000056;"
+	>
+		<thead>
+			<tr>
+				<th class="text-center">nome_rota</th>
 
+				<th class="text-center">distancia</th>
+				<th class="text-center">partida</th>
+				<th class="text-center">chegada</th>
+				<th class="text-center">direcao</th>
+				<th class="text-center">status</th>
+			</tr>
+		</thead>
+		<tbody>
+			{#each rotaAllReturn as rotai}
+				<tr>
+					<td class="text-center">{rotai.nome}</td>
 
+					<td class="text-center">{rotai.distancia}</td>
+					<td class="text-center">{rotai.ponto_inicial}</td>
+					<td class="text-center">{rotai.ponto_final}</td>
+					<td class="text-center">{rotai.direcao}</td>
+					{#if rotai.status == 1}
+						<td class="text-center">Desbloqueado</td>
+						<td class="text-center"
+							><button class="button" on:click={() => bloquearDesbloquer(rotai)}>Bloquer</button
+							></td
+						>
+					{/if}
+					{#if rotai.status == 0}
+						<td class="text-center">Bloqueado</td>
+						<td class="text-center"
+							><button class="button" on:click={() => bloquearDesbloquer(rotai)}>Desbloquear</button
+							></td
+						>
+					{/if}
+				</tr>
+			{/each}
+		</tbody>
+	</table>
 </section>
 
 <style>

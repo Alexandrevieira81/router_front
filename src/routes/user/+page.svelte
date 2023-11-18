@@ -102,7 +102,7 @@
 			postRegistro = post.registro;
 			delete post.tipo_usuario;
 			delete post.registro;
-			returnUser = await AtualizarUser(post,postRegistro);
+			returnUser = await AtualizarUser(post, postRegistro);
 			console.log(returnUser.data);
 
 			if (returnUser.status == 200) {
@@ -131,21 +131,22 @@
 
 		try {
 			let post = user.registro;
-			let senha = prompt('Digite sua senha para confirmar');
-			returnUser = await DeletarUser(post);
-			console.log(returnUser.data);
-			if (returnUser.status == 200) {
-				cancelar();
-				alert(returnUser.data.message);
-				user.registro = '';
-				user.nome = '';
-				user.email = '';
-				user.senha = '';
-				user.tipo_usuario = '';
-			} else if (returnUser.status == 401) {
-				limparSessao();
-			} else {
-				alert(returnUser.data.message);
+			if (confirm('Deseja Realmente Deletar o Ponto de Código ' + post)) {
+				returnUser = await DeletarUser(post);
+				console.log(returnUser.data);
+				if (returnUser.status == 200) {
+					cancelar();
+					alert(returnUser.data.message);
+					user.registro = '';
+					user.nome = '';
+					user.email = '';
+					user.senha = '';
+					user.tipo_usuario = '';
+				} else if (returnUser.status == 401) {
+					limparSessao();
+				} else {
+					alert(returnUser.data.message);
+				}
 			}
 		} catch (error) {
 			alert('Erro Fora do Protocolo');
