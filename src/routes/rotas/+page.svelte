@@ -75,9 +75,11 @@
 		let listaFinal = [];
 		//post.password = md5(post.password);
 		returnAllSegmentos = await buscarAllSegmentos();
+		console.log("Retornou o que carrega os segmentos");
+		console.log(returnAllSegmentos);
 
 		if (returnAllSegmentos.status == 200) {
-			for (let value of returnAllSegmentos.data) {
+			for (let value of returnAllSegmentos.data.segmentos) {
 				console.log(value.ponto_inicial);
 				if (!listaIncial.includes(value.ponto_inicial)) listaIncial.push(value.ponto_inicial);
 				if (!listaFinal.includes(value.ponto_final)) listaFinal.push(value.ponto_final);
@@ -264,7 +266,7 @@
 		<tbody>
 			{#each rotaAllReturn as rotai}
 				<tr>
-					<td class="text-center">{rotai.nome}</td>
+					<td class="text-center">{rotai.nome_rota}</td>
 
 					<td class="text-center">{rotai.distancia}</td>
 					<td class="text-center">{rotai.ponto_inicial}</td>
