@@ -58,3 +58,20 @@ export const deletarPonto= async (id) => {
         return error.response
     }
 }
+export const buscarPontoID = async (id) => {
+
+    try {
+        const token = sessionStorage.getItem('token')
+
+        let res = await axios.get(baseURL+'/pontos/'+id,{
+            headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${token}`
+            }
+        });
+        return res
+    } catch (error) {
+        console.log(error);
+        return error.response
+    }
+}

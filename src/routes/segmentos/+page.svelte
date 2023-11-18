@@ -11,7 +11,7 @@
 		buscarPontos,
 		cadastrarPonto,
 		deletarPonto,
-		atualizarPonto
+		atualizarPonto,buscarPontoID
 	} from '../services/pontos.js';
 	import { onMount } from 'svelte';
 	import { fly } from 'svelte/transition';
@@ -80,7 +80,7 @@
 					limparSessao();
 				} else {
 					alert(segmentosCadastrado.data.message);
-					limparSessao();
+					
 				}
 			}
 		} catch (error) {
@@ -104,7 +104,7 @@
 
 				if (pontoCadastrado.status == 200) {
 					document.getElementById('buscaPontos').innerHTML = pontoCadastrado.data.message;
-					//iniciarPontos();
+					carregarPontos();
 				} else {
 					document.getElementById('buscaPontos').innerHTML = pontoCadastrado.data.message;
 				}
@@ -119,6 +119,7 @@
 
 				if (pontoCadastrado.status == 200) {
 					document.getElementById('buscaPontos').innerHTML = pontoCadastrado.data.message;
+					carregarPontos();
 				} else {
 					document.getElementById('buscaPontos').innerHTML = pontoCadastrado.data.message;
 				}
@@ -187,19 +188,35 @@
 			if (returnPontos.status == 200) {
 				document.getElementById('buscaPontos').innerHTML = returnPontos.data.message;
 				document.getElementById('buscaPontos').style.color = 'blue';
-				segmento();
+				carregarPontos();
 			} else {
 				document.getElementById('buscaPontos').innerHTML = returnPontos.data.message;
 				document.getElementById('buscaPontos').style.color = 'red';
 			}
 		}
 	};
+	const pontoID = async (id) => {
+		returnPontos = null;
+		
+			returnPontos = await buscarPontoID(id);
+			console.log("Retornou este ponto pelo ID "+returnPontos.data.ponto.nome);
+			if (returnPontos.status == 200) {
+				document.getElementById('buscaPontos').innerHTML = returnPontos.data.message;
+				document.getElementById('buscaPontos').style.color = 'blue';
+				dadosPonto.nome = returnPontos.data.ponto.nome;
+				
+			} else {
+				document.getElementById('buscaPontos').innerHTML = returnPontos.data.message;
+				document.getElementById('buscaPontos').style.color = 'red';
+			}
+		};
+	
 
-	const segmentoID = async () => {
+	const segmentoID = async (id) => {
 		returnSegmentosID = null;
 
-		console.log('Pegou o id do input ' + dadosSegmentos.id);
-		returnSegmentosID = await buscarSegmentoID(dadosSegmentos.id);
+		console.log('Pegou o id do input ' +id);
+		returnSegmentosID = await buscarSegmentoID(id);
 
 		if (returnSegmentosID.status == 200) {
 			segmentoReturnID = await returnSegmentosID.data.segmento;
@@ -353,16 +370,7 @@
 				<h2>
 					<p id="resultado" style="margin-left: 20px;" />
 				</h2>
-				<div>
-					<input type="text" name="" id="inputPesquisarSegmento" bind:value={dadosSegmentos.id} />
-					<button
-						class="button"
-						id="btnPesquisarSegmento"
-						type="button"
-						on:click={() => segmentoID()}>Buscar</button
-					>
-				</div>
-
+		
 				<p style="margin-top: 2px;">Distância:</p>
 				<input type="text" name="" id="distancia" bind:value={dadosSegmentos.distancia} />
 
@@ -439,6 +447,11 @@
 												>Deletar</button
 											></td
 										>
+										<td class="text-center"
+										><button class="button" on:click={() => segmentoID(segmentoi.id)}
+											>Buscar</button
+										></td
+									>
 									</tr>
 								{/each}
 							{:else}
@@ -460,6 +473,7 @@
 											>Deletar</button
 										></td
 									>
+							
 								</tr>
 							{/if}
 						</tbody>
@@ -520,6 +534,11 @@
 										><button class="button" on:click={() => delPonto(pontoi.id)}>Deletar</button
 										></td
 									>
+									<td class="text-center"
+									><button class="button" on:click={() => pontoID(pontoi.id)}
+										>Buscar</button
+									></td
+								>
 								</tr>
 							{/each}
 						</tbody>

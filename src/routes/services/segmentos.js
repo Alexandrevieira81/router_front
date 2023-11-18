@@ -74,3 +74,5 @@ export const buscarSegmentoID = async (id) => {
         return error.response
     }
 }
+
+
