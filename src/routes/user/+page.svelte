@@ -131,7 +131,7 @@
 
 		try {
 			let post = user.registro;
-			if (confirm('Deseja Realmente Deletar o Ponto de Código ' + post)) {
+			if (confirm('Deseja Realmente Deletar o Usuário Com o Registro ' + post+' ?')) {
 				returnUser = await DeletarUser(post);
 				console.log(returnUser.data);
 				if (returnUser.status == 200) {

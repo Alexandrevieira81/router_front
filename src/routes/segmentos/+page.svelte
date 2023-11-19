@@ -11,7 +11,8 @@
 		buscarPontos,
 		cadastrarPonto,
 		deletarPonto,
-		atualizarPonto,buscarPontoID
+		atualizarPonto,
+		buscarPontoID
 	} from '../services/pontos.js';
 	import { onMount } from 'svelte';
 	import { fly } from 'svelte/transition';
@@ -50,9 +51,10 @@
 			const final = document.querySelector('#pontosFinais');
 			post.ponto_inicial = inicial.value;
 			post.ponto_final = final.value;
-			
+
 			if (editId == null) {
 				segmentosCadastrado = await cadastrarSegmento(post);
+				console.log('Retorno do CADASTRAR Segmento ', segmentosCadastrado);
 
 				if (segmentosCadastrado.status == 200) {
 					document.getElementById('resultado').innerHTML = segmentosCadastrado.data.message;
@@ -62,7 +64,6 @@
 					document.getElementById('resultado').style.color = 'red';
 				}
 			} else {
-				
 				post.id = editId;
 				const distancia = document.querySelector('#distancia');
 				const direcao = document.querySelector('#direcao');
@@ -70,8 +71,9 @@
 				post.distancia = distancia.value;
 				post.direcao = direcao.value;
 				post.status = status.value;
-				
+
 				segmentosCadastrado = await atualizarSegmento(post);
+				console.log('Retorno do ATUALIZAR Segmento ', segmentosCadastrado);
 
 				if (segmentosCadastrado.status == 200) {
 					document.getElementById('resultado').innerHTML = segmentosCadastrado.data.message;
@@ -80,7 +82,6 @@
 					limparSessao();
 				} else {
 					alert(segmentosCadastrado.data.message);
-					
 				}
 			}
 		} catch (error) {
@@ -98,9 +99,8 @@
 			let post = { ...dadosPonto };
 
 			if (editIdPonto == null) {
-				console.log('Dentro do Post Ponto Inserção ', post);
 				pontoCadastrado = await cadastrarPonto(post);
-				console.log('Retorno do banco ', pontoCadastrado);
+				console.log('Retorno do CADASTRAR Ponto ', pontoCadastrado);
 
 				if (pontoCadastrado.status == 200) {
 					document.getElementById('buscaPontos').innerHTML = pontoCadastrado.data.message;
@@ -113,9 +113,9 @@
 				//const nome = document.querySelector('NomePonto');
 
 				//post.nome = dadosPonto.nome;
-				console.log('Dentro do Post editar', post);
 
 				pontoCadastrado = await atualizarPonto(post);
+				console.log('Retorno do EDITAR o Ponto', pontoCadastrado);
 
 				if (pontoCadastrado.status == 200) {
 					document.getElementById('buscaPontos').innerHTML = pontoCadastrado.data.message;
@@ -133,8 +133,6 @@
 	};
 
 	const putSegmento = async (segmento) => {
-		
-
 		editId = segmento.id;
 
 		let distancia = document.getElementById('distancia');
@@ -157,11 +155,12 @@
 	const cancelar = async () => {
 		editId = null;
 		document.getElementById('btnCadastrar').innerText = 'Cadastrar';
-	}
+	};
 	const delSegmento = async (id) => {
 		returnSegmentos = null;
 		if (confirm('Deseja Realmente Deletar o Segmento de Código ' + id)) {
 			returnSegmentos = await deletarSegmento(id);
+			console.log("Retorno do Deletar Segmento");
 			console.log(returnSegmentos);
 			if (returnSegmentos.status == 200) {
 				document.getElementById('resultado').innerHTML = returnSegmentos.data.message;
@@ -175,55 +174,56 @@
 	};
 
 	const putPonto = async (ponto) => {
-		console.log(ponto, ' Pegou o atualizar');
-
+		//console.log(ponto, ' Pegou o atualizar');
 		editIdPonto = ponto.id;
-
 		//let pontoNome = document.getElementById('NomePonto');
 		dadosPonto.nome = ponto.nome;
 
 		document.getElementById('btnCadastrarPonto').innerText = 'Atualizar';
 	};
+
 	const delPonto = async (id) => {
 		returnPontos = null;
 		if (confirm('Deseja Realmente Deletar o Ponto de Código ' + id)) {
 			returnPontos = await deletarPonto(id);
+			console.log("Retorno do Deletar Ponto");
 			console.log(returnPontos);
 			if (returnPontos.status == 200) {
 				document.getElementById('buscaPontos').innerHTML = returnPontos.data.message;
 				document.getElementById('buscaPontos').style.color = 'blue';
+				alert(returnPontos.data.message);
 				carregarPontos();
 			} else {
 				document.getElementById('buscaPontos').innerHTML = returnPontos.data.message;
 				document.getElementById('buscaPontos').style.color = 'red';
+				alert(returnPontos.data.message);
 			}
 		}
 	};
 	const pontoID = async (id) => {
 		returnPontos = null;
-		
-			returnPontos = await buscarPontoID(id);
-			console.log(returnPontos.data);
-			if (returnPontos.status == 200) {
-				document.getElementById('buscaPontos').innerHTML = returnPontos.data.message;
-				document.getElementById('buscaPontos').style.color = 'blue';
-				dadosPonto.nome = returnPontos.data.ponto.nome;
-				
-			} else {
-				document.getElementById('buscaPontos').innerHTML = returnPontos.data.message;
-				document.getElementById('buscaPontos').style.color = 'red';
-			}
-		};
-	
+
+		returnPontos = await buscarPontoID(id);
+		console.log('Retorno do Caregando Pontos Pelo ID');
+		console.log(returnPontos.data);
+		if (returnPontos.status == 200) {
+			document.getElementById('buscaPontos').innerHTML = returnPontos.data.message;
+			document.getElementById('buscaPontos').style.color = 'blue';
+			dadosPonto.nome = returnPontos.data.ponto.nome;
+		} else {
+			document.getElementById('buscaPontos').innerHTML = returnPontos.data.message;
+			document.getElementById('buscaPontos').style.color = 'red';
+		}
+	};
 
 	const segmentoID = async (id) => {
 		returnSegmentosID = null;
 
-		console.log('Pegou o id do input ' +id);
 		returnSegmentosID = await buscarSegmentoID(id);
-
+		console.log('Retorno da Pesquisa de Segmento por ID');
 		if (returnSegmentosID.status == 200) {
 			segmentoReturnID = await returnSegmentosID.data.segmento;
+
 			console.log(segmentoReturnID);
 			document.getElementById('buscaSegmentos').innerHTML = returnSegmentosID.data.message;
 			document.getElementById('buscaSegmentos').style.color = 'blue';
@@ -270,6 +270,7 @@
 		flag = 1;
 		returnSegmentos = null;
 		returnSegmentos = await buscarSegmentos();
+		console.log("Retorno de Todos os Segmentos");
 		console.log(returnSegmentos);
 		if (returnSegmentos.status == 200) {
 			segmentoReturn = await returnSegmentos.data.segmentos;
@@ -286,11 +287,11 @@
 		returnPontosCarregados = await buscarPontos();
 
 		if (returnPontosCarregados.status == 200) {
-			console.log(returnPontosCarregados.data.pontos);
+			console.log('Retorno do Carregar Pontos');
+			console.log(returnPontosCarregados.data);
 			pontosReturnCarregados = await returnPontosCarregados.data.pontos;
 			document.getElementById('buscaPontos').innerHTML = returnPontosCarregados.data.message;
 			document.getElementById('buscaPontos').style.color = 'green';
-			console.log(pontosReturnCarregados);
 		} else {
 			document.getElementById('buscaPontos').style.color = 'red';
 			document.getElementById('buscaPontos').innerHTML = returnPontosCarregados.data.message;
@@ -302,11 +303,11 @@
 		returnPontos = await buscarPontos();
 		// O texto de retorno foi removido, pois essa função inicia o combobox apenas
 		if (returnPontos.status == 200) {
-			console.log(returnPontos.data.pontos);
+			console.log('Inciando os Pontos');
+			console.log(returnPontos.data);
 			pontosReturn = await returnPontos.data.pontos;
 			//document.getElementById('buscaPontos').innerHTML = returnPontos.data.message;
 			//document.getElementById('buscaPontos').style.color = 'green';
-			console.log(pontosReturn);
 		} else {
 			//document.getElementById('buscaPontos').style.color = 'red';
 			//document.getElementById('buscaPontos').innerHTML = returnPontos.data.message;
@@ -374,7 +375,7 @@
 				<h2>
 					<p id="resultado" style="margin-left: 20px;" />
 				</h2>
-		
+
 				<p style="margin-top: 2px;">Distância:</p>
 				<input type="text" name="" id="distancia" bind:value={dadosSegmentos.distancia} />
 
@@ -456,10 +457,10 @@
 											></td
 										>
 										<td class="text-center"
-										><button class="button" on:click={() => segmentoID(segmentoi.id)}
-											>Buscar</button
-										></td
-									>
+											><button class="button" on:click={() => segmentoID(segmentoi.id)}
+												>Buscar</button
+											></td
+										>
 									</tr>
 								{/each}
 							{:else}
@@ -481,7 +482,6 @@
 											>Deletar</button
 										></td
 									>
-							
 								</tr>
 							{/if}
 						</tbody>
@@ -543,10 +543,8 @@
 										></td
 									>
 									<td class="text-center"
-									><button class="button" on:click={() => pontoID(pontoi.id)}
-										>Buscar</button
-									></td
-								>
+										><button class="button" on:click={() => pontoID(pontoi.id)}>Buscar</button></td
+									>
 								</tr>
 							{/each}
 						</tbody>

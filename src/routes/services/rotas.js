@@ -7,7 +7,8 @@ export const buscarRotas = async (rota) => {
     try {
 
         const token = sessionStorage.getItem('token')
-
+        console.log("Enviando solicitação de rota para os pontos");
+        console.log(rota);
 
         let res = await axios.post(baseURL + '/rotas', rota, {
             headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` }
@@ -22,6 +23,8 @@ export const buscarRotas = async (rota) => {
 export const buscarAllRotas = async () => {
 
     try {
+
+        console.log("Solicitando todas as Rotas Existentes");
         const token = sessionStorage.getItem('token')
 
         let res = await axios.get(baseURL + '/Allrotas', {
@@ -40,6 +43,7 @@ export const buscarAllRotas = async () => {
 export const buscarAllSegmentos = async () => {
 
     try {
+        console.log("Buscando Todos os Segmentos")
         const token = sessionStorage.getItem('token')
 
         let res = await axios.get(baseURL + '/segmentos', {
@@ -58,6 +62,8 @@ export const buscarAllSegmentos = async () => {
 export const bloquearDesbloquerSegmento = async (segmento) => {
 
     try {
+        console.log("Solicitando bloqueio ou Desbloqueio para a segmento");
+        console.log(segmento);
         const token = sessionStorage.getItem('token')
 
         let res = await axios.put(baseURL +'/bloquearDesbloquerSegmento', segmento, {

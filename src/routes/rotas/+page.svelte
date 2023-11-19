@@ -1,7 +1,12 @@
 <script>
 	import { goto } from '$app/navigation';
 
-	import { buscarRotas, buscarAllRotas, buscarAllSegmentos,bloquearDesbloquerSegmento } from '../services/rotas.js';
+	import {
+		buscarRotas,
+		buscarAllRotas,
+		buscarAllSegmentos,
+		bloquearDesbloquerSegmento
+	} from '../services/rotas.js';
 	import { onMount } from 'svelte';
 
 	let returnRotas;
@@ -31,12 +36,11 @@
 		post.origem = inicial.value;
 		post.destino = final.value;
 		returnRotas = await buscarRotas(post);
+		console.log('Retorno do Calcular Rotas');
 		console.log(returnRotas);
 		if (returnRotas.status == 200) {
 			rotaReturn = await returnRotas.data.rota;
 			document.getElementById('resultado').innerHTML = returnRotas.data.message;
-
-			console.log(rotaReturn);
 			desenharRota(rotaReturn);
 		} else {
 			document.getElementById('resultado').innerHTML = returnRotas.data.message;
@@ -49,19 +53,21 @@
 		//post.password = md5(post.password);
 
 		returnAllRotas = await buscarAllRotas();
+		console.log("Retorno da busca de todas as Rotas");
 		console.log(returnAllRotas);
 		if (returnAllRotas.status == 200) {
 			rotaAllReturn = await returnAllRotas.data;
 
-			console.log(rotaAllReturn);
+			//console.log(rotaAllReturn);
 		}
 	};
 
 	const bloquearDesbloquer = async (segmento) => {
-
 		let statusSegmento = await bloquearDesbloquerSegmento(segmento);
+		console.log("Retorno de Bloquear ou Desbloquear");
+		console.log(statusSegmento);
 
-		if (statusSegmento .status == 200) {
+		if (statusSegmento.status == 200) {
 			document.getElementById('resultado').innerHTML = statusSegmento.data.message;
 			//carregarPontos();
 		} else {
@@ -75,12 +81,12 @@
 		let listaFinal = [];
 		//post.password = md5(post.password);
 		returnAllSegmentos = await buscarAllSegmentos();
-		console.log("Retornou o que carrega os segmentos");
+		console.log('Retornou o que carrega os segmentos');
 		console.log(returnAllSegmentos);
 
 		if (returnAllSegmentos.status == 200) {
 			for (let value of returnAllSegmentos.data.segmentos) {
-				console.log(value.ponto_inicial);
+				//console.log(value.ponto_inicial);
 				if (!listaIncial.includes(value.ponto_inicial)) listaIncial.push(value.ponto_inicial);
 				if (!listaFinal.includes(value.ponto_final)) listaFinal.push(value.ponto_final);
 			}
@@ -109,9 +115,9 @@
 				x = x - segmentos[i].distancia;
 			}
 
-			console.log(segmentos[i].direcao);
+			/* 		console.log(segmentos[i].direcao);
 			console.log('y  ....' + y);
-			console.log('x  ....' + x);
+			console.log('x  ....' + x); */
 
 			ctx.lineTo(x, y);
 
@@ -209,7 +215,6 @@
 				<th class="text-center">partida</th>
 				<th class="text-center">chegada</th>
 				<th class="text-center">direcao</th>
-				
 			</tr>
 		</thead>
 		<tbody>
