@@ -8,14 +8,19 @@
 		if (res.status == 200) {
 			sessionStorage.removeItem('user');
 			sessionStorage.removeItem('token');
-			document.getElementById('resultado').innerHTML = 'Deslogado Com Sucesso';
+			document.getElementById('resultado').innerHTML = res.data.message;
+			setTimeout(() => {
+				goto('/');
+			}, 2000);
+		} else if (res.status == 401) {
+			sessionStorage.removeItem('user');
+			sessionStorage.removeItem('token');
+			document.getElementById('resultado').innerHTML = res.data.message;
 			setTimeout(() => {
 				goto('/');
 			}, 2000);
 		} else {
-			sessionStorage.removeItem('user');
-			sessionStorage.removeItem('token');
-			document.getElementById('resultado').innerHTML = 'Usuário não Autenticado';
+			document.getElementById('resultado').innerHTML = 'Ocorreu um erro inesperado';
 			setTimeout(() => {
 				goto('/');
 			}, 2000);
@@ -23,38 +28,54 @@
 	};
 </script>
 
-<h1>Página Centralizadora</h1>
+<svelte:head>
+	<link
+		href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
+		rel="stylesheet"
+		integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN"
+		crossorigin="anonymous"
+	/>
+</svelte:head>
+<body style="margin-left: 45px">
+	<script
+		src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
+		integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL"
+		crossorigin="anonymous"
+	></script>
 
-<h2>
-	<p id="resultado" />
-</h2>
+	<h1>Página Centralizadora</h1>
 
-<button
-	on:click={() => {
-		goto('/rotas');
-	}}
-	type="button"
-	class="btn text-white nav-link">Buscar Rotas</button
->
-<button
-	on:click={() => {
-		goto('/user');
-	}}
-	type="button"
-	class="btn text-white nav-link">Cadastro de usuários</button
->
-<button
-	on:click={() => {
-		goto('/segmentos');
-	}}
-	type="button"
-	class="btn text-white nav-link">Cadastro de Segmentos</button
->
+	<h2>
+		<p id="resultado" />
+	</h2>
 
-<div>
-	<button class="button" on:click={() => deslogar()}>Deslogar</button>
-</div>
+	<button
+		on:click={() => {
+			goto('/rotas');
+		}}
+		type="button"
+		>Buscar Rotas</button
+	>
+	<button
+		on:click={() => {
+			goto('/user');
+		}}
+		type="button"
+		>Cadastro de usuários</button
+	>
+	<button
+		on:click={() => {
+			goto('/segmentos');
+		}}
+		type="button"
+		>Cadastro de Segmentos</button
+	>
 
-<div>
-	<a href="/">Voltar</a>
-</div>
+	<div>
+		<button type="button" on:click={() => deslogar()}>Deslogar</button>
+	</div>
+
+	<div>
+		<a href="/">Voltar</a>
+	</div>
+</body>

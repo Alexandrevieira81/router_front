@@ -9,6 +9,7 @@
 	import { onMount } from 'svelte';
 	import { goto } from '$app/navigation';
 	import md5 from 'md5';
+	import { limparSessao } from '../middleware/middleware.js';
 
 	let returnUser;
 	let userReturn = [];
@@ -131,7 +132,7 @@
 
 		try {
 			let post = user.registro;
-			if (confirm('Deseja Realmente Deletar o Usuário Com o Registro ' + post+' ?')) {
+			if (confirm('Deseja Realmente Deletar o Usuário Com o Registro ' + post + ' ?')) {
 				returnUser = await DeletarUser(post);
 				console.log(returnUser.data);
 				if (returnUser.status == 200) {
@@ -247,114 +248,131 @@
 		let tipo = document.getElementById('tipo');
 		tipo.value = '';
 	};
-	const limparSessao = async () => {
-		sessionStorage.removeItem('user');
-		sessionStorage.removeItem('token');
-		document.getElementById('resultado').innerHTML =
-			'Usuário não Autenticado, Você Será Redirecionado para o Login';
-		setTimeout(() => {
-			goto('/');
-		}, 2000);
-	};
 </script>
 
-<section class="telaCadastroUsuario">
-	<div class="telaCadastroUsuario_wrapper usuario">
-		<h1>Welcome to the Jungle</h1>
-		<a href="/centralizadora">Home</a>
+<svelte:head>
+	<link
+		href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
+		rel="stylesheet"
+		integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN"
+		crossorigin="anonymous"
+	/>
+</svelte:head>
+<body style="margin-left: 45px">
+	<script
+		src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
+		integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL"
+		crossorigin="anonymous"
+	></script>
 
-		<div>
-			<input type="text" name="" id="buscarRegistro" bind:value={getId.registro} />
+	<section class="telaCadastroUsuario">
+		<div class="telaCadastroUsuario_wrapper usuario">
+			<h1>Welcome to the Jungle</h1>
+			<a href="/centralizadora">Home</a>
 
-			<button class="button" on:click={() => buscar()}>Buscar</button>
+			<div>
+				<input type="text" name="" id="buscarRegistro" bind:value={getId.registro} />
+
+				<button class="button" on:click={() => buscar()}>Buscar</button>
+			</div>
+
+			<p style="margin-top: 2px;">Registro:</p>
+			<input type="text" name="" id="registro" bind:value={user.registro} />
+
+			<p style="margin-top: 20px;">Nome:</p>
+			<input type="text" name="" id="nome" style="margin-top: 2px;" bind:value={user.nome} />
+
+			<p style="margin-top: 20px;">Email:</p>
+			<input type="text" name="" id="email" style="margin-top: 2px;" bind:value={user.email} />
+
+			<p style="margin-top: 20px;">Senha:</p>
+			<input type="text" name="" id="senha" style="margin-top: 2px;" bind:value={user.senha} />
+
+			<p style="margin-top: 20px;">Tipo de Usuário:</p>
+			<input
+				type="number"
+				name=""
+				id="tipo"
+				style="margin-top: 2px;"
+				bind:value={user.tipo_usuario}
+			/>
 		</div>
 
-		<p style="margin-top: 2px;">Registro:</p>
-		<input type="text" name="" id="registro" bind:value={user.registro} />
+		<h2>
+			<p id="resultado" />
+		</h2>
 
-		<p style="margin-top: 20px;">Nome:</p>
-		<input type="text" name="" id="nome" style="margin-top: 2px;" bind:value={user.nome} />
-
-		<p style="margin-top: 20px;">Email:</p>
-		<input type="text" name="" id="email" style="margin-top: 2px;" bind:value={user.email} />
-
-		<p style="margin-top: 20px;">Senha:</p>
-		<input type="text" name="" id="senha" style="margin-top: 2px;" bind:value={user.senha} />
-
-		<p style="margin-top: 20px;">Tipo de Usuário:</p>
-		<input
-			type="number"
-			name=""
-			id="tipo"
-			style="margin-top: 2px;"
-			bind:value={user.tipo_usuario}
-		/>
-	</div>
-
-	<h2>
-		<p id="resultado" />
-	</h2>
-
-	<div>
-		<button class="button" id="btnNovo" type="button" on:click={() => novo()}>Novo</button>
-		<button class="button" id="btnCadastrar" type="button" on:click={() => cadastrar()}
-			>Cadastrar</button
-		>
-		<button class="button" id="btnAtualizar" type="button" on:click={() => atualizar()}
-			>Atualizar</button
-		>
-		<button class="button" id="btnDeletar" type="button" on:click={() => deletar()}>Deletar</button>
-		<button class="button" id="btnCancelar" type="button" on:click={() => cancelar()}
-			>Cancelar</button
-		>
-	</div>
-	<div style="margin: 20px 20px 20px 20px;">
-		<table
-			id="tableUsuarios"
-			class="table table-bordered table-striped"
-			width="100%"
-			style="box-shadow: 0 10px 40px #00000056;"
-		>
-			<thead>
-				<tr>
-					<!-- <th class="text-center">nome_rota</th> -->
-					<th class="text-center">Registro</th>
-					<th class="text-center">Nome</th>
-					<th class="text-center">Email</th>
-					<th class="text-center">Tipo</th>
-				</tr>
-			</thead>
-			<tbody>
-				{#each userReturn as useri}
+		<div>
+			<button class="button" id="btnNovo" type="button" on:click={() => novo()}>Novo</button>
+			<button class="button" id="btnCadastrar" type="button" on:click={() => cadastrar()}
+				>Cadastrar</button
+			>
+			<button class="button" id="btnAtualizar" type="button" on:click={() => atualizar()}
+				>Atualizar</button
+			>
+			<button class="button" id="btnDeletar" type="button" on:click={() => deletar()}
+				>Deletar</button
+			>
+			<button class="button" id="btnCancelar" type="button" on:click={() => cancelar()}
+				>Cancelar</button
+			>
+		</div>
+		<div class="table-wrapper-scroll-y my-custom-scrollbar" style="margin: 20px 20px 20px 20px;">
+			<table
+				class="table table-bordered table-striped mb-0"
+				id="tableUsuarios"
+				width="100%"
+				style="box-shadow: 0 10px 40px #00000056;"
+			>
+				<thead>
 					<tr>
-						<!-- <td class="text-center">{rotai.nome_rota}</td> -->
-						<td class="text-center">{useri.registro}</td>
-						<td class="text-center">{useri.nome}</td>
-						<td class="text-center">{useri.email}</td>
-						{#if useri.tipo_usuario == 1}
-							<td class="text-center">Administrador</td>
-						{/if}
-						{#if useri.tipo_usuario == 0}
-							<td class="text-center">Usuário Comum</td>
-						{/if}
-
-						<td class="text-center"
-							><button class="button" on:click={() => preparaAtualizar(useri)}>Atualizar</button
-							></td
-						>
-						<td class="text-center"
-							><button class="button" on:click={() => preparaDeletar(useri)}>Deletar</button></td
-						>
+						<!-- <th class="text-center">nome_rota</th> -->
+						<th class="text-center">Registro</th>
+						<th class="text-center">Nome</th>
+						<th class="text-center">Email</th>
+						<th class="text-center">Tipo</th>
 					</tr>
-				{/each}
-			</tbody>
-		</table>
-	</div>
-</section>
+				</thead>
+				<tbody>
+					{#each userReturn as useri}
+						<tr>
+							<!-- <td class="text-center">{rotai.nome_rota}</td> -->
+							<td class="text-center">{useri.registro}</td>
+							<td class="text-center">{useri.nome}</td>
+							<td class="text-center">{useri.email}</td>
+							{#if useri.tipo_usuario == 1}
+								<td class="text-center">Administrador</td>
+							{/if}
+							{#if useri.tipo_usuario == 0}
+								<td class="text-center">Usuário Comum</td>
+							{/if}
+
+							<td class="text-center"
+								><button class="button" on:click={() => preparaAtualizar(useri)}>Atualizar</button
+								></td
+							>
+							<td class="text-center"
+								><button class="button" on:click={() => preparaDeletar(useri)}>Deletar</button></td
+							>
+						</tr>
+					{/each}
+				</tbody>
+			</table>
+		</div>
+	</section>
+</body>
 
 <style>
 	.button {
 		margin-top: 10px;
 		margin-left: 45px;
+	}
+	.my-custom-scrollbar {
+		position: relative;
+		height: 200px;
+		overflow: auto;
+	}
+	.table-wrapper-scroll-y {
+		display: block;
 	}
 </style>

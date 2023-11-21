@@ -15,7 +15,7 @@
 		buscarPontoID
 	} from '../services/pontos.js';
 	import { onMount } from 'svelte';
-	import { fly } from 'svelte/transition';
+	import {limparSessao} from '../middleware/middleware.js'
 
 	let returnSegmentos;
 	let segmentoReturn = [];
@@ -59,8 +59,15 @@
 				if (segmentosCadastrado.status == 200) {
 					document.getElementById('resultado').innerHTML = segmentosCadastrado.data.message;
 					document.getElementById('resultado').style.color = 'blue';
-				} else {
+				} else if (segmentosCadastrado.status == 401) {
+					limparSessao();
 					document.getElementById('resultado').innerHTML = segmentosCadastrado.data.message;
+					document.getElementById('resultado').style.color = 'red';
+				} else if (segmentosCadastrado.status == 403) {
+					document.getElementById('resultado').innerHTML = segmentosCadastrado.data.message;
+					document.getElementById('resultado').style.color = 'red';
+				} else {
+					document.getElementById('resultado').innerHTML = 'Ocorreu um erro inesperado';
 					document.getElementById('resultado').style.color = 'red';
 				}
 			} else {
@@ -77,11 +84,14 @@
 
 				if (segmentosCadastrado.status == 200) {
 					document.getElementById('resultado').innerHTML = segmentosCadastrado.data.message;
+					alert(segmentosCadastrado.data.message);
 				} else if (segmentosCadastrado.status == 401) {
-					alert(segmentosCadastrado.data.message);
 					limparSessao();
-				} else {
 					alert(segmentosCadastrado.data.message);
+				} else if (segmentosCadastrado.status == 403) {
+					alert(segmentosCadastrado.data.message);
+				} else {
+					alert('Ocorreu um erro inesperado');
 				}
 			}
 		} catch (error) {
@@ -105,8 +115,13 @@
 				if (pontoCadastrado.status == 200) {
 					document.getElementById('buscaPontos').innerHTML = pontoCadastrado.data.message;
 					carregarPontos();
-				} else {
+				} else if (pontoCadastrado.status == 401) {
 					document.getElementById('buscaPontos').innerHTML = pontoCadastrado.data.message;
+					limparSessao();
+				} else if (pontoCadastrado.status == 403) {
+					document.getElementById('buscaPontos').innerHTML = pontoCadastrado.data.message;
+				} else {
+					document.getElementById('buscaPontos').innerHTML = 'Ocorreu um erro inesperado';
 				}
 			} else {
 				post.id = editIdPonto;
@@ -120,8 +135,13 @@
 				if (pontoCadastrado.status == 200) {
 					document.getElementById('buscaPontos').innerHTML = pontoCadastrado.data.message;
 					carregarPontos();
-				} else {
+				} else if (pontoCadastrado.status == 401) {
 					document.getElementById('buscaPontos').innerHTML = pontoCadastrado.data.message;
+					limparSessao();
+				} else if (pontoCadastrado.status == 403) {
+					document.getElementById('buscaPontos').innerHTML = pontoCadastrado.data.message;
+				} else {
+					document.getElementById('buscaPontos').innerHTML = 'Ocorreu um erro inesperado';
 				}
 			}
 		} catch (error) {
@@ -160,14 +180,21 @@
 		returnSegmentos = null;
 		if (confirm('Deseja Realmente Deletar o Segmento de Código ' + id)) {
 			returnSegmentos = await deletarSegmento(id);
-			console.log("Retorno do Deletar Segmento");
+			console.log('Retorno do Deletar Segmento');
 			console.log(returnSegmentos);
 			if (returnSegmentos.status == 200) {
 				document.getElementById('resultado').innerHTML = returnSegmentos.data.message;
 				document.getElementById('resultado').style.color = 'blue';
 				segmento();
-			} else {
+			} else if (returnSegmentos.status == 401) {
+				limparSessao();
 				document.getElementById('resultado').innerHTML = returnSegmentos.data.message;
+				document.getElementById('resultado').style.color = 'red';
+			} else if (returnSegmentos.status == 403) {
+				document.getElementById('resultado').innerHTML = returnSegmentos.data.message;
+				document.getElementById('resultado').style.color = 'red';
+			} else {
+				document.getElementById('resultado').innerHTML = 'Ocorreu um erro inesperado';
 				document.getElementById('resultado').style.color = 'red';
 			}
 		}
@@ -186,17 +213,26 @@
 		returnPontos = null;
 		if (confirm('Deseja Realmente Deletar o Ponto de Código ' + id)) {
 			returnPontos = await deletarPonto(id);
-			console.log("Retorno do Deletar Ponto");
+			console.log('Retorno do Deletar Ponto');
 			console.log(returnPontos);
 			if (returnPontos.status == 200) {
 				document.getElementById('buscaPontos').innerHTML = returnPontos.data.message;
 				document.getElementById('buscaPontos').style.color = 'blue';
 				alert(returnPontos.data.message);
 				carregarPontos();
-			} else {
+			} else if (returnPontos.status == 401) {
+				limparSessao();
 				document.getElementById('buscaPontos').innerHTML = returnPontos.data.message;
 				document.getElementById('buscaPontos').style.color = 'red';
 				alert(returnPontos.data.message);
+			} else if (returnPontos.status == 403) {
+				document.getElementById('buscaPontos').innerHTML = returnPontos.data.message;
+				document.getElementById('buscaPontos').style.color = 'red';
+				alert(returnPontos.data.message);
+			} else {
+				document.getElementById('buscaPontos').innerHTML = 'Ocorreu um erro inesperado';
+				document.getElementById('buscaPontos').style.color = 'red';
+				alert('Ocorreu um erro inesperado');
 			}
 		}
 	};
@@ -210,9 +246,19 @@
 			document.getElementById('buscaPontos').innerHTML = returnPontos.data.message;
 			document.getElementById('buscaPontos').style.color = 'blue';
 			dadosPonto.nome = returnPontos.data.ponto.nome;
-		} else {
+		} else if (returnPontos.status == 401) {
+			limparSessao();
 			document.getElementById('buscaPontos').innerHTML = returnPontos.data.message;
 			document.getElementById('buscaPontos').style.color = 'red';
+			alert(returnPontos.data.message);
+		} else if (returnPontos.status == 403) {
+			document.getElementById('buscaPontos').innerHTML = returnPontos.data.message;
+			document.getElementById('buscaPontos').style.color = 'red';
+			alert(returnPontos.data.message);
+		} else {
+			document.getElementById('buscaPontos').innerHTML = 'Ocorreu um erro inesperado';
+			document.getElementById('buscaPontos').style.color = 'red';
+			alert('Ocorreu um erro inesperado');
 		}
 	};
 
@@ -261,8 +307,27 @@
 			ponto_final.value = '';
 			alert(returnSegmentosID.data.message);
 			limparSessao();
-		} else {
+		} else if (returnSegmentosID.status == 403) {
+			document.getElementById('buscaPontos').innerHTML = returnSegmentosID.data.message;
+			document.getElementById('buscaPontos').style.color = 'red';
+			let distancia = document.getElementById('distancia');
+			distancia.value = '';
+
+			let direcao = document.getElementById('direcao');
+			direcao.value = '';
+
+			let status = document.getElementById('status');
+			status.value = '';
+
+			let ponto_inicial = document.getElementById('pontosIniciais');
+			ponto_inicial.value = '';
+
+			let ponto_final = document.getElementById('pontosFinais');
+			ponto_final.value = '';
 			alert(returnSegmentosID.data.message);
+		} else {
+			document.getElementById('buscaPontos').innerHTML = 'Ocorreu um erro inesperado';
+			document.getElementById('buscaPontos').style.color = 'red';
 		}
 	};
 
@@ -270,16 +335,28 @@
 		flag = 1;
 		returnSegmentos = null;
 		returnSegmentos = await buscarSegmentos();
-		console.log("Retorno de Todos os Segmentos");
+		console.log('Retorno de Todos os Segmentos');
 		console.log(returnSegmentos);
 		if (returnSegmentos.status == 200) {
 			segmentoReturn = await returnSegmentos.data.segmentos;
 			document.getElementById('buscaSegmentos').innerHTML = returnSegmentos.data.message;
 			document.getElementById('buscaSegmentos').style.color = 'blue';
+
+		} else if (returnSegmentos.status == 401) {
+			limparSessao();
+			document.getElementById('buscaPontos').innerHTML = returnSegmentos.data.message;
+			document.getElementById('buscaPontos').style.color = 'red';
+			
+		} else if (returnSegmentos.status == 403) {
+			document.getElementById('buscaPontos').innerHTML = returnSegmentos.data.message;
+			document.getElementById('buscaPontos').style.color = 'red';
+			
 		} else {
-			document.getElementById('buscaSegmentos').innerHTML = returnSegmentos.data.message;
-			document.getElementById('buscaSegmentos').style.color = 'red';
+			document.getElementById('buscaPontos').innerHTML = 'Ocorreu um erro inesperado';
+			document.getElementById('buscaPontos').style.color = 'red';
+			alert('Ocorreu um erro inesperado');
 		}
+		
 	};
 
 	const carregarPontos = async () => {
@@ -292,10 +369,22 @@
 			pontosReturnCarregados = await returnPontosCarregados.data.pontos;
 			document.getElementById('buscaPontos').innerHTML = returnPontosCarregados.data.message;
 			document.getElementById('buscaPontos').style.color = 'green';
-		} else {
-			document.getElementById('buscaPontos').style.color = 'red';
+
+		} else if (returnPontosCarregados.status == 401) {
+			limparSessao();
 			document.getElementById('buscaPontos').innerHTML = returnPontosCarregados.data.message;
+			document.getElementById('buscaPontos').style.color = 'red';
+			
+		} else if (returnPontosCarregados.status == 403) {
+			document.getElementById('buscaPontos').innerHTML = returnPontosCarregados.data.message;
+			document.getElementById('buscaPontos').style.color = 'red';
+			
+		} else {
+			document.getElementById('buscaPontos').innerHTML = 'Ocorreu um erro inesperado';
+			document.getElementById('buscaPontos').style.color = 'red';
+			
 		}
+		
 	};
 
 	const iniciarPontos = async () => {
@@ -336,16 +425,6 @@
 			option.text = pontos[i].nome;
 			selectPontos.appendChild(option);
 		}
-	};
-
-	const limparSessao = async () => {
-		sessionStorage.removeItem('user');
-		sessionStorage.removeItem('token');
-		document.getElementById('resultado').innerHTML =
-			'Usuário não Autenticado, Você Será Redirecionado para o Login';
-		setTimeout(() => {
-			goto('/');
-		}, 2000);
 	};
 </script>
 
