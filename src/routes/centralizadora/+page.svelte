@@ -8,22 +8,22 @@
 		if (res.status == 200) {
 			sessionStorage.removeItem('user');
 			sessionStorage.removeItem('token');
-			document.getElementById('resultado').innerHTML = res.data.message;
+			alert(res.data.message);
 			setTimeout(() => {
 				goto('/');
-			}, 2000);
+			}, 500);
 		} else if (res.status == 401) {
 			sessionStorage.removeItem('user');
 			sessionStorage.removeItem('token');
-			document.getElementById('resultado').innerHTML = res.data.message;
+			alert(res.data.message);
 			setTimeout(() => {
 				goto('/');
-			}, 2000);
+			}, 500);
 		} else {
-			document.getElementById('resultado').innerHTML = 'Ocorreu um erro inesperado';
+			alert('Ocorreu um erro inesperado');
 			setTimeout(() => {
 				goto('/');
-			}, 2000);
+			}, 500);
 		}
 	};
 </script>

@@ -15,7 +15,7 @@
 		buscarPontoID
 	} from '../services/pontos.js';
 	import { onMount } from 'svelte';
-	import {limparSessao} from '../middleware/middleware.js'
+	import { limparSessao } from '../middleware/middleware.js';
 
 	let returnSegmentos;
 	let segmentoReturn = [];
@@ -32,12 +32,16 @@
 	let returnPontos;
 	let pontosReturn = [];
 
+	let returnPontosID;
+	let pontosReturnID = [];
+
 	let returnPontosCarregados;
 	let pontosReturnCarregados = [];
 
 	let editId = null;
 	let editIdPonto = null;
 	let flag = 1;
+	let flag2 = 1;
 
 	onMount(async () => {
 		iniciarPontos();
@@ -57,18 +61,19 @@
 				console.log('Retorno do CADASTRAR Segmento ', segmentosCadastrado);
 
 				if (segmentosCadastrado.status == 200) {
-					document.getElementById('resultado').innerHTML = segmentosCadastrado.data.message;
-					document.getElementById('resultado').style.color = 'blue';
+					alert(segmentosCadastrado.data.message);
+					
 				} else if (segmentosCadastrado.status == 401) {
+					
+					alert(segmentosCadastrado.data.message);
 					limparSessao();
-					document.getElementById('resultado').innerHTML = segmentosCadastrado.data.message;
-					document.getElementById('resultado').style.color = 'red';
+					
 				} else if (segmentosCadastrado.status == 403) {
-					document.getElementById('resultado').innerHTML = segmentosCadastrado.data.message;
-					document.getElementById('resultado').style.color = 'red';
+					alert(segmentosCadastrado.data.message);
+					
 				} else {
-					document.getElementById('resultado').innerHTML = 'Ocorreu um erro inesperado';
-					document.getElementById('resultado').style.color = 'red';
+					alert('Ocorreu um erro inesperado');
+				
 				}
 			} else {
 				post.id = editId;
@@ -83,11 +88,12 @@
 				console.log('Retorno do ATUALIZAR Segmento ', segmentosCadastrado);
 
 				if (segmentosCadastrado.status == 200) {
-					document.getElementById('resultado').innerHTML = segmentosCadastrado.data.message;
+					
 					alert(segmentosCadastrado.data.message);
 				} else if (segmentosCadastrado.status == 401) {
-					limparSessao();
+					
 					alert(segmentosCadastrado.data.message);
+					limparSessao();
 				} else if (segmentosCadastrado.status == 403) {
 					alert(segmentosCadastrado.data.message);
 				} else {
@@ -113,15 +119,15 @@
 				console.log('Retorno do CADASTRAR Ponto ', pontoCadastrado);
 
 				if (pontoCadastrado.status == 200) {
-					document.getElementById('buscaPontos').innerHTML = pontoCadastrado.data.message;
+					alert(pontoCadastrado.data.message);
 					carregarPontos();
 				} else if (pontoCadastrado.status == 401) {
-					document.getElementById('buscaPontos').innerHTML = pontoCadastrado.data.message;
+					alert(pontoCadastrado.data.message);
 					limparSessao();
 				} else if (pontoCadastrado.status == 403) {
-					document.getElementById('buscaPontos').innerHTML = pontoCadastrado.data.message;
+					alert(pontoCadastrado.data.message);
 				} else {
-					document.getElementById('buscaPontos').innerHTML = 'Ocorreu um erro inesperado';
+					alert('Ocorreu um erro inesperado');
 				}
 			} else {
 				post.id = editIdPonto;
@@ -133,15 +139,15 @@
 				console.log('Retorno do EDITAR o Ponto', pontoCadastrado);
 
 				if (pontoCadastrado.status == 200) {
-					document.getElementById('buscaPontos').innerHTML = pontoCadastrado.data.message;
+					alert( pontoCadastrado.data.message);
 					carregarPontos();
 				} else if (pontoCadastrado.status == 401) {
-					document.getElementById('buscaPontos').innerHTML = pontoCadastrado.data.message;
+					alert( pontoCadastrado.data.message);
 					limparSessao();
 				} else if (pontoCadastrado.status == 403) {
-					document.getElementById('buscaPontos').innerHTML = pontoCadastrado.data.message;
+					alert( pontoCadastrado.data.message);
 				} else {
-					document.getElementById('buscaPontos').innerHTML = 'Ocorreu um erro inesperado';
+					alert('Ocorreu um erro inesperado');
 				}
 			}
 		} catch (error) {
@@ -183,19 +189,20 @@
 			console.log('Retorno do Deletar Segmento');
 			console.log(returnSegmentos);
 			if (returnSegmentos.status == 200) {
-				document.getElementById('resultado').innerHTML = returnSegmentos.data.message;
-				document.getElementById('resultado').style.color = 'blue';
+				alert(returnSegmentos.data.message);
+				
 				segmento();
 			} else if (returnSegmentos.status == 401) {
+				
+				alert(returnSegmentos.data.message);
 				limparSessao();
-				document.getElementById('resultado').innerHTML = returnSegmentos.data.message;
-				document.getElementById('resultado').style.color = 'red';
+				
 			} else if (returnSegmentos.status == 403) {
-				document.getElementById('resultado').innerHTML = returnSegmentos.data.message;
-				document.getElementById('resultado').style.color = 'red';
+				alert(returnSegmentos.data.message);
+				
 			} else {
-				document.getElementById('resultado').innerHTML = 'Ocorreu um erro inesperado';
-				document.getElementById('resultado').style.color = 'red';
+				alert('Ocorreu um erro inesperado');
+				
 			}
 		}
 	};
@@ -216,45 +223,41 @@
 			console.log('Retorno do Deletar Ponto');
 			console.log(returnPontos);
 			if (returnPontos.status == 200) {
-				document.getElementById('buscaPontos').innerHTML = returnPontos.data.message;
-				document.getElementById('buscaPontos').style.color = 'blue';
+			
 				alert(returnPontos.data.message);
 				carregarPontos();
 			} else if (returnPontos.status == 401) {
-				limparSessao();
-				document.getElementById('buscaPontos').innerHTML = returnPontos.data.message;
-				document.getElementById('buscaPontos').style.color = 'red';
 				alert(returnPontos.data.message);
+				limparSessao();
 			} else if (returnPontos.status == 403) {
-				document.getElementById('buscaPontos').innerHTML = returnPontos.data.message;
-				document.getElementById('buscaPontos').style.color = 'red';
 				alert(returnPontos.data.message);
 			} else {
-				document.getElementById('buscaPontos').innerHTML = 'Ocorreu um erro inesperado';
-				document.getElementById('buscaPontos').style.color = 'red';
+				
 				alert('Ocorreu um erro inesperado');
 			}
 		}
 	};
 	const pontoID = async (id) => {
-		returnPontos = null;
+		returnPontosID = null;
 
-		returnPontos = await buscarPontoID(id);
+		returnPontosID = await buscarPontoID(id);
 		console.log('Retorno do Caregando Pontos Pelo ID');
-		console.log(returnPontos.data);
-		if (returnPontos.status == 200) {
-			document.getElementById('buscaPontos').innerHTML = returnPontos.data.message;
+		console.log(returnPontosID.data);
+		if (returnPontosID.status == 200) {
+			document.getElementById('buscaPontos').innerHTML = returnPontosID.data.message;
 			document.getElementById('buscaPontos').style.color = 'blue';
-			dadosPonto.nome = returnPontos.data.ponto.nome;
-		} else if (returnPontos.status == 401) {
+			dadosPonto.nome = returnPontosID.data.ponto.nome;
+			pontosReturnID = returnPontosID.data.ponto;
+			flag2 = 0;
+		} else if (returnPontosID.status == 401) {
 			limparSessao();
-			document.getElementById('buscaPontos').innerHTML = returnPontos.data.message;
+			document.getElementById('buscaPontos').innerHTML = returnPontosID.data.message;
 			document.getElementById('buscaPontos').style.color = 'red';
-			alert(returnPontos.data.message);
-		} else if (returnPontos.status == 403) {
-			document.getElementById('buscaPontos').innerHTML = returnPontos.data.message;
+			alert(returnPontosID.data.message);
+		} else if (returnPontosID.status == 403) {
+			document.getElementById('buscaPontos').innerHTML = returnPontosID.data.message;
 			document.getElementById('buscaPontos').style.color = 'red';
-			alert(returnPontos.data.message);
+			alert(returnPontosID.data.message);
 		} else {
 			document.getElementById('buscaPontos').innerHTML = 'Ocorreu um erro inesperado';
 			document.getElementById('buscaPontos').style.color = 'red';
@@ -291,6 +294,7 @@
 		} else if (returnSegmentosID.status == 401) {
 			document.getElementById('buscaSegmentos').innerHTML = returnSegmentosID.data.message;
 			document.getElementById('buscaSegmentos').style.color = 'red';
+			alert(returnSegmentosID.data.message);
 			let distancia = document.getElementById('distancia');
 			distancia.value = '';
 
@@ -310,6 +314,7 @@
 		} else if (returnSegmentosID.status == 403) {
 			document.getElementById('buscaPontos').innerHTML = returnSegmentosID.data.message;
 			document.getElementById('buscaPontos').style.color = 'red';
+			alert(returnSegmentosID.data.message);
 			let distancia = document.getElementById('distancia');
 			distancia.value = '';
 
@@ -326,6 +331,7 @@
 			ponto_final.value = '';
 			alert(returnSegmentosID.data.message);
 		} else {
+			alert(returnSegmentosID.data.message);
 			document.getElementById('buscaPontos').innerHTML = 'Ocorreu um erro inesperado';
 			document.getElementById('buscaPontos').style.color = 'red';
 		}
@@ -341,7 +347,6 @@
 			segmentoReturn = await returnSegmentos.data.segmentos;
 			document.getElementById('buscaSegmentos').innerHTML = returnSegmentos.data.message;
 			document.getElementById('buscaSegmentos').style.color = 'blue';
-
 		} else if (returnSegmentos.status == 401) {
 			limparSessao();
 			document.getElementById('buscaPontos').innerHTML = returnSegmentos.data.message;
@@ -354,12 +359,12 @@
 		} else {
 			document.getElementById('buscaPontos').innerHTML = 'Ocorreu um erro inesperado';
 			document.getElementById('buscaPontos').style.color = 'red';
-			alert('Ocorreu um erro inesperado');
+			
 		}
-		
 	};
 
 	const carregarPontos = async () => {
+		flag2 = 1;
 		returnPontosCarregados = null;
 		returnPontosCarregados = await buscarPontos();
 
@@ -369,25 +374,21 @@
 			pontosReturnCarregados = await returnPontosCarregados.data.pontos;
 			document.getElementById('buscaPontos').innerHTML = returnPontosCarregados.data.message;
 			document.getElementById('buscaPontos').style.color = 'green';
-
 		} else if (returnPontosCarregados.status == 401) {
 			limparSessao();
 			document.getElementById('buscaPontos').innerHTML = returnPontosCarregados.data.message;
 			document.getElementById('buscaPontos').style.color = 'red';
-			
 		} else if (returnPontosCarregados.status == 403) {
 			document.getElementById('buscaPontos').innerHTML = returnPontosCarregados.data.message;
 			document.getElementById('buscaPontos').style.color = 'red';
-			
 		} else {
 			document.getElementById('buscaPontos').innerHTML = 'Ocorreu um erro inesperado';
 			document.getElementById('buscaPontos').style.color = 'red';
-			
 		}
-		
 	};
 
 	const iniciarPontos = async () => {
+		flag2 = 1;
 		returnPontos = null;
 		returnPontos = await buscarPontos();
 		// O texto de retorno foi removido, pois essa função inicia o combobox apenas
@@ -607,25 +608,52 @@
 							</tr>
 						</thead>
 						<tbody>
-							{#each pontosReturnCarregados as pontoi}
+							{#if flag2 == 1}
+								{#each pontosReturnCarregados as pontoi}
+									<tr>
+										<!-- <td class="text-center">{rotai.nome_rota}</td> -->
+
+										<td class="text-center">{pontoi.id}</td>
+										<td class="text-center">{pontoi.nome}</td>
+
+										<td class="text-center"
+											><button class="button" on:click={() => putPonto(pontoi)}>Atualizar</button
+											></td
+										>
+										<td class="text-center"
+											><button class="button" on:click={() => delPonto(pontoi.id)}>Deletar</button
+											></td
+										>
+										<td class="text-center"
+											><button class="button" on:click={() => pontoID(pontoi.id)}>Buscar</button
+											></td
+										>
+									</tr>
+								{/each}
+							{:else}
 								<tr>
 									<!-- <td class="text-center">{rotai.nome_rota}</td> -->
 
-									<td class="text-center">{pontoi.id}</td>
-									<td class="text-center">{pontoi.nome}</td>
+									<td class="text-center">{pontosReturnID.id}</td>
+									<td class="text-center">{pontosReturnID.nome}</td>
 
 									<td class="text-center"
-										><button class="button" on:click={() => putPonto(pontoi)}>Atualizar</button></td
-									>
-									<td class="text-center"
-										><button class="button" on:click={() => delPonto(pontoi.id)}>Deletar</button
+										><button class="button" on:click={() => putPonto(pontosReturnID)}
+											>Atualizar</button
 										></td
 									>
 									<td class="text-center"
-										><button class="button" on:click={() => pontoID(pontoi.id)}>Buscar</button></td
+										><button class="button" on:click={() => delPonto(pontosReturnID.id)}
+											>Deletar</button
+										></td
+									>
+									<td class="text-center"
+										><button class="button" on:click={() => pontoID(returnPontosID.id)}
+											>Buscar</button
+										></td
 									>
 								</tr>
-							{/each}
+							{/if}
 						</tbody>
 					</table>
 				</div>

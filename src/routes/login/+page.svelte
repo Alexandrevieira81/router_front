@@ -34,20 +34,13 @@
 
 			setTimeout(() => {
 				goto('/centralizadora');
-			}, 2000);
+			}, 500);
 		} else if (returnLogin.status == 401) {
 			userReturn = {
 				success: returnLogin.data.success,
 				message: returnLogin.data.message
 			};
 			limparSessao();
-			alert(userReturn.message);
-		} else if (returnLogin.status == 403) {
-			userReturn = {
-				success: returnLogin.data.success,
-				message: returnLogin.data.message
-			};
-
 			alert(userReturn.message);
 		} else {
 			alert('Erro Fora do Protocolo');

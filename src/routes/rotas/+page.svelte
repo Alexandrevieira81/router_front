@@ -41,14 +41,19 @@
 		console.log(returnRotas);
 		if (returnRotas.status == 200) {
 			rotaReturn = await returnRotas.data.rota;
+			document.getElementById('resultado').style.color = 'blue';
 			document.getElementById('resultado').innerHTML = returnRotas.data.message;
 			desenharRota(rotaReturn);
 		} else if (returnRotas.status == 400) {
+			document.getElementById('resultado').style.color = 'red';
 			document.getElementById('resultado').innerHTML = returnRotas.data.message;
+			ctx.clearRect(0, 0, 500, 500);
 		} else if (returnRotas.status == 401) {
+			document.getElementById('resultado').style.color = 'red';
 			document.getElementById('resultado').innerHTML = returnRotas.data.message;
 			limparSessao();
 		} else {
+			document.getElementById('resultado').style.color = 'red';
 			document.getElementById('resultado').innerHTML = 'Ocorreu um erro inesperado';
 		}
 	};
@@ -63,12 +68,18 @@
 		console.log(returnAllRotas);
 		if (returnAllRotas.status == 200) {
 			rotaAllReturn = await returnAllRotas.data;
+			document.getElementById('resultado').style.color = 'blue';
 			document.getElementById('resultado').innerHTML = 'Todas as Rotas Encontradas';
 			//console.log(rotaAllReturn);
 		} else if (returnRotas.status == 401) {
-			document.getElementById('resultado').innerHTML = 'Usuário não autenticado';
+			document.getElementById('resultado').style.color = 'red';
+			document.getElementById('resultado').innerHTML = rotaAllReturn.message;
 			limparSessao();
+		} else if (returnRotas.status == 403) {
+			document.getElementById('resultado').style.color = 'red';
+			document.getElementById('resultado').innerHTML = rotaAllReturn.message;
 		} else {
+			document.getElementById('resultado').style.color = 'red';
 			document.getElementById('resultado').innerHTML = 'Ocorreu um erro inesperado';
 		}
 	};
@@ -79,12 +90,19 @@
 		console.log(statusSegmento);
 
 		if (statusSegmento.status == 200) {
+			document.getElementById('resultado').style.color = 'blue';
 			document.getElementById('resultado').innerHTML = statusSegmento.data.message;
 			//carregarPontos();
+			allRota();
 		} else if (returnRotas.status == 401) {
+			document.getElementById('resultado').style.color = 'red';
 			document.getElementById('resultado').innerHTML = statusSegmento.data.message;
 			limparSessao();
+		} else if (returnRotas.status == 403) {
+			document.getElementById('resultado').style.color = 'red';
+			document.getElementById('resultado').innerHTML = statusSegmento.data.message;
 		} else {
+			document.getElementById('resultado').style.color = 'red';
 			document.getElementById('resultado').innerHTML = 'Ocorreu um erro inesperado';
 		}
 	};
@@ -106,32 +124,38 @@
 			}
 			prencherPontosIniciais(listaIncial);
 			prencherPontosFinais(listaFinal);
-		} else if (returnRotas.status == 401) {
-			document.getElementById('resultado').innerHTML = statusSegmento.data.message;
+		} else if (returnAllSegmentos.status == 401) {
+			document.getElementById('resultado').style.color = 'red';
+			document.getElementById('resultado').innerHTML = returnAllSegmentos.data.message;
 			limparSessao();
+		} else if (returnAllSegmentos.status == 403) {
+			document.getElementById('resultado').style.color = 'red';
+			document.getElementById('resultado').innerHTML = returnAllSegmentos.data.message;
 		} else {
+			document.getElementById('resultado').style.color = 'red';
 			document.getElementById('resultado').innerHTML = 'Ocorreu um erro inesperado';
 		}
 	};
 
 	const desenharRota = async (segmentos) => {
-		var x = 75;
-		var y = 150;
+		var x = 150;
+		var y = 250;
 		ctx.clearRect(0, 0, 500, 500);
-		ctx.fillStyle = '#000';
+		
 		ctx.beginPath();
+		ctx.fillStyle = "blue";
 
 		for (let i = 0; i < segmentos.length; i++) {
 			ctx.moveTo(x, y);
 			if (segmentos[i].direcao === 'frente') {
-				y = y - segmentos[i].distancia;
+				y = y - (segmentos[i].distancia*2);
 			}
 
 			if (segmentos[i].direcao === 'direita') {
-				x = x + segmentos[i].distancia;
+				x = x + (segmentos[i].distancia*2);
 			}
 			if (segmentos[i].direcao === 'esquerda') {
-				x = x - segmentos[i].distancia;
+				x = x - (segmentos[i].distancia*2);
 			}
 
 			/* 		console.log(segmentos[i].direcao);
@@ -270,7 +294,7 @@
 			</tbody>
 		</table>
 
-		<canvas id="rotaCanvas" width="150" height="150">
+		<canvas id="rotaCanvas" width="300" height="250">
 			<p>Teste</p>
 		</canvas>
 
