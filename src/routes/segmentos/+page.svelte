@@ -76,7 +76,7 @@
 				
 				}
 			} else {
-				post.id = editId;
+				post.segmento_id = editId;
 				const distancia = document.querySelector('#distancia');
 				const direcao = document.querySelector('#direcao');
 				const status = document.querySelector('#status');
@@ -130,7 +130,7 @@
 					alert('Ocorreu um erro inesperado');
 				}
 			} else {
-				post.id = editIdPonto;
+				post.ponto_id = editIdPonto;
 				//const nome = document.querySelector('NomePonto');
 
 				//post.nome = dadosPonto.nome;
@@ -159,7 +159,7 @@
 	};
 
 	const putSegmento = async (segmento) => {
-		editId = segmento.id;
+		editId = segmento.segmento_id;
 
 		let distancia = document.getElementById('distancia');
 		distancia.value = segmento.distancia;
@@ -209,7 +209,7 @@
 
 	const putPonto = async (ponto) => {
 		//console.log(ponto, ' Pegou o atualizar');
-		editIdPonto = ponto.id;
+		editIdPonto = ponto.ponto_id;
 		//let pontoNome = document.getElementById('NomePonto');
 		dadosPonto.nome = ponto.nome;
 
@@ -412,7 +412,7 @@
 
 		for (var i = 0; i < pontos.length; i++) {
 			option = document.createElement('option');
-			option.value = pontos[i].id;
+			option.value = pontos[i].ponto_id;
 			option.text = pontos[i].nome;
 			selectPontos.appendChild(option);
 		}
@@ -422,7 +422,7 @@
 		var option;
 		for (var i = 0; i < pontos.length; i++) {
 			option = document.createElement('option');
-			option.value = pontos[i].id;
+			option.value = pontos[i].ponto_id;
 			option.text = pontos[i].nome;
 			selectPontos.appendChild(option);
 		}
@@ -520,7 +520,7 @@
 								{#each segmentoReturn as segmentoi}
 									<tr>
 										<!-- <td class="text-center">{rotai.nome_rota}</td> -->
-										<td class="text-center">{segmentoi.id}</td>
+										<td class="text-center">{segmentoi.segmento_id}</td>
 										<td class="text-center">{segmentoi.distancia}</td>
 										<td class="text-center">{segmentoi.ponto_inicial}</td>
 										<td class="text-center">{segmentoi.ponto_final}</td>
@@ -532,12 +532,12 @@
 											></td
 										>
 										<td class="text-center"
-											><button class="button" on:click={() => delSegmento(segmentoi.id)}
+											><button class="button" on:click={() => delSegmento(segmentoi.segmento_id)}
 												>Deletar</button
 											></td
 										>
 										<td class="text-center"
-											><button class="button" on:click={() => segmentoID(segmentoi.id)}
+											><button class="button" on:click={() => segmentoID(segmentoi.segmento_id)}
 												>Buscar</button
 											></td
 										>
@@ -546,7 +546,7 @@
 							{:else}
 								<tr>
 									<!-- <td class="text-center">{rotai.nome_rota}</td> -->
-									<td class="text-center">{segmentoReturnID.id}</td>
+									<td class="text-center">{segmentoReturnID.segmento_id}</td>
 									<td class="text-center">{segmentoReturnID.distancia}</td>
 									<td class="text-center">{segmentoReturnID.ponto_inicial}</td>
 									<td class="text-center">{segmentoReturnID.ponto_final}</td>
@@ -558,7 +558,7 @@
 										></td
 									>
 									<td class="text-center"
-										><button class="button" on:click={() => delSegmento(segmentoReturnID.id)}
+										><button class="button" on:click={() => delSegmento(segmentoReturnID.segmento_id)}
 											>Deletar</button
 										></td
 									>
@@ -613,7 +613,7 @@
 									<tr>
 										<!-- <td class="text-center">{rotai.nome_rota}</td> -->
 
-										<td class="text-center">{pontoi.id}</td>
+										<td class="text-center">{pontoi.ponto_id}</td>
 										<td class="text-center">{pontoi.nome}</td>
 
 										<td class="text-center"
@@ -621,11 +621,11 @@
 											></td
 										>
 										<td class="text-center"
-											><button class="button" on:click={() => delPonto(pontoi.id)}>Deletar</button
+											><button class="button" on:click={() => delPonto(pontoi.ponto_id)}>Deletar</button
 											></td
 										>
 										<td class="text-center"
-											><button class="button" on:click={() => pontoID(pontoi.id)}>Buscar</button
+											><button class="button" on:click={() => pontoID(pontoi.ponto_id)}>Buscar</button
 											></td
 										>
 									</tr>
@@ -634,7 +634,7 @@
 								<tr>
 									<!-- <td class="text-center">{rotai.nome_rota}</td> -->
 
-									<td class="text-center">{pontosReturnID.id}</td>
+									<td class="text-center">{pontosReturnID.ponto_id}</td>
 									<td class="text-center">{pontosReturnID.nome}</td>
 
 									<td class="text-center"
@@ -643,12 +643,12 @@
 										></td
 									>
 									<td class="text-center"
-										><button class="button" on:click={() => delPonto(pontosReturnID.id)}
+										><button class="button" on:click={() => delPonto(pontosReturnID.ponto_id)}
 											>Deletar</button
 										></td
 									>
 									<td class="text-center"
-										><button class="button" on:click={() => pontoID(returnPontosID.id)}
+										><button class="button" on:click={() => pontoID(returnPontosID.ponto_id)}
 											>Buscar</button
 										></td
 									>

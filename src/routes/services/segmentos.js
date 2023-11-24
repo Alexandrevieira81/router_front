@@ -1,5 +1,5 @@
 import axios from 'axios';
-const baseURL = 'http://127.0.0.1:3000';
+const baseURL = 'http://25.64.61.9:3000';
 
 
 export const cadastrarSegmento = async (segmento) => {
@@ -22,7 +22,7 @@ export const atualizarSegmento = async (segmento) => {
         console.log("Atualizando Dados de Segmento ");
         console.log(segmento);
         const token = sessionStorage.getItem('token')
-        let res = await axios.put(baseURL + '/segmentos/' + segmento.id, segmento, { headers: { Authorization: `Bearer ${token}` } });
+        let res = await axios.put(baseURL + '/segmentos/' + segmento.segmento_id, segmento, { headers: { Authorization: `Bearer ${token}` } });
         return res
     } catch (error) {
         console.log("ERRO AO ATUALIZAR SEGMENTO: " + error);

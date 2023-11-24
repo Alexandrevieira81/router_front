@@ -1,5 +1,5 @@
 import axios from 'axios';
-const baseURL = 'http://127.0.0.1:3000';
+const baseURL = 'http://25.64.61.9:3000';
 
 
 export const cadastrarPonto = async (ponto) => {
@@ -44,7 +44,7 @@ export const atualizarPonto = async (ponto) => {
         console.log('Dados Enviados Para EDITAR o Ponto');
         console.log(ponto);
         const token = sessionStorage.getItem('token')
-        let res = await axios.put(baseURL + '/pontos/' + ponto.id, ponto, { headers: { Authorization: `Bearer ${token}` } });
+        let res = await axios.put(baseURL + '/pontos/' + ponto.ponto_id, ponto, { headers: { Authorization: `Bearer ${token}` } });
         return res
     } catch (error) {
         console.log("ERRO AO ATUALIZAR PONTO: " + error);
