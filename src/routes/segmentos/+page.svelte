@@ -62,18 +62,13 @@
 
 				if (segmentosCadastrado.status == 200) {
 					alert(segmentosCadastrado.data.message);
-					
 				} else if (segmentosCadastrado.status == 401) {
-					
 					alert(segmentosCadastrado.data.message);
 					limparSessao();
-					
 				} else if (segmentosCadastrado.status == 403) {
 					alert(segmentosCadastrado.data.message);
-					
 				} else {
 					alert('Ocorreu um erro inesperado');
-				
 				}
 			} else {
 				post.segmento_id = editId;
@@ -88,10 +83,8 @@
 				console.log('Retorno do ATUALIZAR Segmento ', segmentosCadastrado);
 
 				if (segmentosCadastrado.status == 200) {
-					
 					alert(segmentosCadastrado.data.message);
 				} else if (segmentosCadastrado.status == 401) {
-					
 					alert(segmentosCadastrado.data.message);
 					limparSessao();
 				} else if (segmentosCadastrado.status == 403) {
@@ -120,6 +113,7 @@
 
 				if (pontoCadastrado.status == 200) {
 					alert(pontoCadastrado.data.message);
+					iniciarPontos();
 					carregarPontos();
 				} else if (pontoCadastrado.status == 401) {
 					alert(pontoCadastrado.data.message);
@@ -139,13 +133,14 @@
 				console.log('Retorno do EDITAR o Ponto', pontoCadastrado);
 
 				if (pontoCadastrado.status == 200) {
-					alert( pontoCadastrado.data.message);
+					alert(pontoCadastrado.data.message);
+					iniciarPontos();
 					carregarPontos();
 				} else if (pontoCadastrado.status == 401) {
-					alert( pontoCadastrado.data.message);
+					alert(pontoCadastrado.data.message);
 					limparSessao();
 				} else if (pontoCadastrado.status == 403) {
-					alert( pontoCadastrado.data.message);
+					alert(pontoCadastrado.data.message);
 				} else {
 					alert('Ocorreu um erro inesperado');
 				}
@@ -190,19 +185,15 @@
 			console.log(returnSegmentos);
 			if (returnSegmentos.status == 200) {
 				alert(returnSegmentos.data.message);
-				
+
 				segmento();
 			} else if (returnSegmentos.status == 401) {
-				
 				alert(returnSegmentos.data.message);
 				limparSessao();
-				
 			} else if (returnSegmentos.status == 403) {
 				alert(returnSegmentos.data.message);
-				
 			} else {
 				alert('Ocorreu um erro inesperado');
-				
 			}
 		}
 	};
@@ -223,8 +214,8 @@
 			console.log('Retorno do Deletar Ponto');
 			console.log(returnPontos);
 			if (returnPontos.status == 200) {
-			
 				alert(returnPontos.data.message);
+				iniciarPontos();
 				carregarPontos();
 			} else if (returnPontos.status == 401) {
 				alert(returnPontos.data.message);
@@ -232,7 +223,6 @@
 			} else if (returnPontos.status == 403) {
 				alert(returnPontos.data.message);
 			} else {
-				
 				alert('Ocorreu um erro inesperado');
 			}
 		}
@@ -351,15 +341,12 @@
 			limparSessao();
 			document.getElementById('buscaPontos').innerHTML = returnSegmentos.data.message;
 			document.getElementById('buscaPontos').style.color = 'red';
-			
 		} else if (returnSegmentos.status == 403) {
 			document.getElementById('buscaPontos').innerHTML = returnSegmentos.data.message;
 			document.getElementById('buscaPontos').style.color = 'red';
-			
 		} else {
 			document.getElementById('buscaPontos').innerHTML = 'Ocorreu um erro inesperado';
 			document.getElementById('buscaPontos').style.color = 'red';
-			
 		}
 	};
 
@@ -410,6 +397,10 @@
 		var selectPontos = document.getElementById('pontosIniciais');
 		var option;
 
+		for (i = 0; i < selectPontos.length; i = i + 1) {
+			selectPontos.remove(i);
+		}
+
 		for (var i = 0; i < pontos.length; i++) {
 			option = document.createElement('option');
 			option.value = pontos[i].ponto_id;
@@ -420,6 +411,11 @@
 	const prencherPontosFinais = async (pontos) => {
 		var selectPontos = document.getElementById('pontosFinais');
 		var option;
+
+		for (i = 0; i < selectPontos.length; i = i + 1) {
+			selectPontos.remove(i);
+		}
+
 		for (var i = 0; i < pontos.length; i++) {
 			option = document.createElement('option');
 			option.value = pontos[i].ponto_id;
@@ -558,8 +554,9 @@
 										></td
 									>
 									<td class="text-center"
-										><button class="button" on:click={() => delSegmento(segmentoReturnID.segmento_id)}
-											>Deletar</button
+										><button
+											class="button"
+											on:click={() => delSegmento(segmentoReturnID.segmento_id)}>Deletar</button
 										></td
 									>
 								</tr>
@@ -621,11 +618,13 @@
 											></td
 										>
 										<td class="text-center"
-											><button class="button" on:click={() => delPonto(pontoi.ponto_id)}>Deletar</button
+											><button class="button" on:click={() => delPonto(pontoi.ponto_id)}
+												>Deletar</button
 											></td
 										>
 										<td class="text-center"
-											><button class="button" on:click={() => pontoID(pontoi.ponto_id)}>Buscar</button
+											><button class="button" on:click={() => pontoID(pontoi.ponto_id)}
+												>Buscar</button
 											></td
 										>
 									</tr>
