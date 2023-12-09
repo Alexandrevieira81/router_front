@@ -54,7 +54,7 @@
 			limparSessao();
 		} else {
 			document.getElementById('resultado').style.color = 'red';
-			document.getElementById('resultado').innerHTML = 'Ocorreu um erro inesperado';
+			document.getElementById('resultado').innerHTML = 'Informe pontos de origem e destino válidos';
 		}
 	};
 
@@ -140,21 +140,21 @@
 	const desenharRota = async (segmentos) => {
 		var x = 150;
 		var y = 250;
-		ctx.clearRect(0, 0, 500, 500);
+		ctx.clearRect(0, 0, 1500, 800);
 		
 		ctx.beginPath();
 		ctx.fillStyle = "blue";
 
 		for (let i = 0; i < segmentos.length; i++) {
 			ctx.moveTo(x, y);
-			if (segmentos[i].direcao === 'frente') {
+			if (segmentos[i].direcao.split(";")[0] === 'Frente') {
 				y = y - (segmentos[i].distancia*2);
 			}
 
-			if (segmentos[i].direcao === 'direita') {
+			if (segmentos[i].direcao.split(";")[0] === 'Direita') {
 				x = x + (segmentos[i].distancia*2);
 			}
-			if (segmentos[i].direcao === 'esquerda') {
+			if (segmentos[i].direcao.split(";")[0] === 'Esquerda') {
 				x = x - (segmentos[i].distancia*2);
 			}
 
@@ -241,18 +241,7 @@
 			<div>
 				<a href="/centralizadora">Home</a>
 			</div>
-			<p style="margin-top: 2px;">INICIO:</p>
-			<input type="text" name="" id="" placeholder="Portaria" bind:value={buscaRotas.origem} />
-
-			<p style="margin-top: 20px;">FIM:</p>
-			<input
-				type="text"
-				name=""
-				id=""
-				style="margin-top: 2px;"
-				placeholder="Capela"
-				bind:value={buscaRotas.destino}
-			/>
+		
 		</div>
 		<div>
 			<select name="" id="pontosIniciais" />
