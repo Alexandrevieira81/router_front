@@ -1,6 +1,6 @@
 import axios from 'axios';
 import { buscarSegmentoID } from './segmentos';
-const baseURL = 'http://127.0.0.1:3000';
+const baseURL = 'http://25.64.61.9:22000';
 
 export const buscarRotas = async (rota) => {
 
